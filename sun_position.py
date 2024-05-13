@@ -1,4 +1,4 @@
-from math import sin, cos, radians, asin, acos, pi, degrees
+from math import sin, cos, tan, radians, asin, acos, pi, degrees
 
 def get_sun_elevation_angle(geographical_latitude: float, sun_declination: float, hour_angle: float) -> float:
     """
@@ -82,3 +82,23 @@ def get_degrees_day(day: float) -> float:
     :return: relative degrees of the day in rad of the day
     """
     return (2 * pi * day) / 365
+
+def get_time_sunrise(geographical_latitude: float, sun_declination: float) -> float:
+    """
+    Returns the time of a sunrise in (float) hours.
+    
+    :param geographical_latitude: Geographical latitude of the assumed location in rad
+    :param sun_declination: (Seasonal) sun declination of the earth in rad
+    :return: sunrise time in (float hours)
+    """
+    return 12 - (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
+
+def get_time_sunset(geographical_latitude: float, sun_declination: float) -> float:
+    """
+    Returns the time of a sunset in (float) hours.
+    
+    :param geographical_latitude: Geographical latitude of the assumed location in rad
+    :param sun_declination: (Seasonal) sun declination of the earth in rad
+    :return: sunset time in (float hours)
+    """
+    return 12 + (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
