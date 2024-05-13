@@ -102,3 +102,13 @@ def get_time_sunset(geographical_latitude: float, sun_declination: float) -> flo
     :return: sunset time in (float hours)
     """
     return 12 + (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
+
+def get_daylight_duration(geographical_latitude: float, sun_declination: float) -> float:
+    """
+    Returns the duration of daylight in (float) hours.
+    
+    :param geographical_latitude: Geographical latitude of the assumed location in rad
+    :param sun_declination: (Seasonal) sun declination of the earth in rad
+    :return: daylight duration in (float hours)
+    """
+    return 2 * (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
