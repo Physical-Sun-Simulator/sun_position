@@ -44,17 +44,18 @@ def get_sun_declination(day: float) -> float:
     
     return 0.3948 - 23.2559 * cos(degrees_day + radians(9.1)) - 0.3915 * cos(2 * degrees_day + radians(5.4)) - 0.1764 * cos(3 * degrees_day + radians(26))
 
-# def get_hour_angle(true_solar_time: float) -> float:
-#     """
-#     Returns the hour angle in rad.
+def get_hour_angle(true_solar_time: float) -> float:
+    """
+    Returns the hour angle in rad.
     
-#     :param true_solar_time: True Solar Time in hours
-#     :return: hour angle in rad
-#     """
-#     common = 14
-#     if true_solar_time < 12.00:
-#         reut
-#     elif true_solar_time > 12.00:
-        
-#     else:
-#         # Throw error... undefined behaviour
+    :param true_solar_time: True Solar Time in hours
+    :return: hour angle in rad
+    """
+    common = radians(15) * abs(12 - true_solar_time)
+    if true_solar_time < 12.00:
+        return -common
+    elif true_solar_time > 12.00:
+        return common
+    else:
+        # Undefined behaviour
+        raise Exception
