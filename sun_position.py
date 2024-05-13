@@ -23,7 +23,7 @@ def get_sun_azimuth_angle(sun_elevation_angle: float, geographical_latitude: flo
     :param sun_elevation_angle: Sun elevation angle in rad
     :param geographical_latitude: (Seasonal) sun declination of the earth in rad
     :param sun_declination: (Seasonal) sun declination of the earth in rad
-    :param true_solar_time: True Solar Time in hours
+    :param true_solar_time: True Solar Time in (float) hours
     :return: sun azimuth angle in rad
     """
     # TODO: Separate calculations
@@ -48,7 +48,7 @@ def get_hour_angle(true_solar_time: float) -> float:
     """
     Returns the hour angle in rad.
     
-    :param true_solar_time: True Solar Time in hours
+    :param true_solar_time: True Solar Time in (float) hours
     :return: hour angle in rad
     """
     common = radians(15) * abs(12 - true_solar_time)
@@ -59,3 +59,13 @@ def get_hour_angle(true_solar_time: float) -> float:
     else:
         # Undefined behaviour
         raise Exception
+    
+def get_true_solar_time(local_clock_time: float, geographical_longitude: float, standard_time_meridian_longitude: float, equation_of_time: float) -> float:
+    """
+    Returns the true solar time in (float) hours.
+    
+    :param local_clock_time: Local clock Time in (float) hours
+    :param geographical_longitude: geographical longitude in (float) hours
+    :param standard_time_meridian_longitude: Longitude of the standard time meridian (pi/18 rad)
+    """
+    return local_clock_time + (geographical_longitude - standard_time_meridian_longitude) / (pi/18) + equation_of_time
