@@ -1,4 +1,4 @@
-from math import sin, cos, tan, asin, acos, pi, degrees
+from math import sin, cos, radians, asin, acos, pi, degrees
 
 def get_sun_elevation_angle(geographical_latitude: float, sun_declination: float, hour_angle: float) -> float:
     """
@@ -40,6 +40,21 @@ def get_sun_declination(day: float) -> float:
     :param day: day of the year
     :return: sun declination in rad
     """
-    degrees_day = (360 * day) / 365
+    degrees_day = (2 * pi * day) / 365
     
-    return 0.3948 - 23.2559 * cos(degrees_day + 9.1) - 0.3915 * cos(2 * degrees_day + 5.4) - 0.1764 * cos(3 * degrees_day + 26)
+    return 0.3948 - 23.2559 * cos(degrees_day + radians(9.1)) - 0.3915 * cos(2 * degrees_day + radians(5.4)) - 0.1764 * cos(3 * degrees_day + radians(26))
+
+# def get_hour_angle(true_solar_time: float) -> float:
+#     """
+#     Returns the hour angle in rad.
+    
+#     :param true_solar_time: True Solar Time in hours
+#     :return: hour angle in rad
+#     """
+#     common = 14
+#     if true_solar_time < 12.00:
+#         reut
+#     elif true_solar_time > 12.00:
+        
+#     else:
+#         # Throw error... undefined behaviour
