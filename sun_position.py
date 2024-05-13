@@ -40,7 +40,7 @@ def get_sun_declination(day: float) -> float:
     :param day: day of the year
     :return: sun declination in rad
     """
-    degrees_day = (2 * pi * day) / 365
+    degrees_day = get_degrees_day(day)
     
     return 0.3948 - 23.2559 * cos(degrees_day + radians(9.1)) - 0.3915 * cos(2 * degrees_day + radians(5.4)) - 0.1764 * cos(3 * degrees_day + radians(26))
 
@@ -69,3 +69,16 @@ def get_true_solar_time(local_clock_time: float, geographical_longitude: float, 
     :param standard_time_meridian_longitude: Longitude of the standard time meridian (pi/18 rad)
     """
     return local_clock_time + (geographical_longitude - standard_time_meridian_longitude) / (pi/18) + equation_of_time
+
+def get_equation_of_time(day: float) -> float:
+    degrees_day = get_degrees_day(day)
+    return 0.0066 + 7.3525 * cos(degrees_day + radians(85.9)) + 9.9359 * cos(2 * degrees_day + radians(108.9)) + 0.3387 * cos(3 * get_degrees_day + radians(105.2))
+
+def get_degrees_day(day: float) -> float:
+    """
+    Returns the relative rotation of the earth from the start of the year in rad/day.
+    
+    :param day: day of the year
+    :return: relative degrees of the day in rad of the day
+    """
+    return (2 * pi * day) / 365
