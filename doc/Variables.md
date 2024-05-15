@@ -52,3 +52,5 @@ The difference between apparent solar time and mean solar time.
 [Standard time is the synchronization of clocks within a geographical region to a single time standard, rather than a local mean time standard](https://en.wikipedia.org/wiki/Standard_time) (see *Figure 7*).
 
 ![Figure 7](https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/World_Time_Zones_Map.png/1024px-World_Time_Zones_Map.png)
+
+*Figure 7*
