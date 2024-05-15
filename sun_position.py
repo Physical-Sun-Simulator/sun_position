@@ -10,7 +10,7 @@ def get_sun_elevation_angle(geographical_latitude: float, sun_declination: float
     :return: sun elevation angle in rad
     """
     # TODO: Separate calculations
-    return asin(cos(geographical_latitude) * cos(sun_declination) * hour_angle + sin(geographical_latitude) * sin(sun_declination))
+    return asin(cos(geographical_latitude) * cos(sun_declination) * cos(hour_angle) + sin(geographical_latitude) * sin(sun_declination))
 
 def get_sun_azimuth_angle(sun_elevation_angle: float, geographical_latitude: float, sun_declination: float, true_solar_time: float) -> float:
     """
@@ -27,11 +27,11 @@ def get_sun_azimuth_angle(sun_elevation_angle: float, geographical_latitude: flo
     :return: sun azimuth angle in rad
     """
     # TODO: Separate calculations
-    inner = (sin(sun_elevation_angle) * sin(geographical_latitude) - sin(sun_declination)) / (cos(sun_elevation_angle) * cos(geographical_latitude))
+    common = (sin(sun_elevation_angle) * sin(geographical_latitude) - sin(sun_declination)) / (cos(sun_elevation_angle) * cos(geographical_latitude))
     if true_solar_time <= 12.00:
-        return degrees(pi - acos(inner))
+        return pi - acos(common)
     else: # true_solar_time <= 12.00:
-        return degrees(pi + acos(inner))
+        return pi + acos(common)
 
 def get_sun_declination(day: float) -> float:
     """
@@ -40,9 +40,9 @@ def get_sun_declination(day: float) -> float:
     :param day: day of the year
     :return: sun declination in rad
     """
-    degrees_day = get_degrees_day(day)
+    rad_day = get_rad_day(day)
     
-    return 0.3948 - 23.2559 * cos(degrees_day + radians(9.1)) - 0.3915 * cos(2 * degrees_day + radians(5.4)) - 0.1764 * cos(3 * degrees_day + radians(26))
+    return radians(0.3948 - 23.2559 * cos(rad_day + radians(9.1)) - 0.3915 * cos(2 * rad_day + radians(5.4)) - 0.1764 * cos(3 * rad_day + radians(26)))
 
 def get_hour_angle(true_solar_time: float) -> float:
     """
@@ -57,24 +57,25 @@ def get_hour_angle(true_solar_time: float) -> float:
     elif true_solar_time > 12.00:
         return common
     else:
-        # Undefined behaviour
-        raise Exception
+        # Implied behaviour
+        return 0
     
-def get_true_solar_time(local_clock_time: float, geographical_longitude: float, standard_time_meridian_longitude: float, equation_of_time: float) -> float:
+def get_true_solar_time(local_clock_time: float, geographical_longitude: float, equation_of_time: float, standard_time_meridian_longitude: float = pi / 12) -> float:
     """
     Returns the true solar time in (float) hours.
     
     :param local_clock_time: Local clock Time in (float) hours
     :param geographical_longitude: geographical longitude in (float) hours
-    :param standard_time_meridian_longitude: Longitude of the standard time meridian (pi/18 rad)
+    :param standard_time_meridian_longitude: Longitude of the standard time meridian (pi/12 rad)
     """
-    return local_clock_time + (geographical_longitude - standard_time_meridian_longitude) / (pi/18) + equation_of_time
+    return local_clock_time + 12 * (geographical_longitude - standard_time_meridian_longitude) / pi + equation_of_time
 
 def get_equation_of_time(day: float) -> float:
-    degrees_day = get_degrees_day(day)
-    return 0.0066 + 7.3525 * cos(degrees_day + radians(85.9)) + 9.9359 * cos(2 * degrees_day + radians(108.9)) + 0.3387 * cos(3 * get_degrees_day + radians(105.2))
+    rad_day = get_rad_day(day)
+    minutes = 0.0066 + 7.3525 * cos(rad_day + radians(85.9)) + 9.9359 * cos(2 * rad_day + radians(108.9)) + 0.3387 * cos(3 * rad_day + radians(105.2))
+    return minutes / 60
 
-def get_degrees_day(day: float) -> float:
+def get_rad_day(day: float) -> float:
     """
     Returns the relative rotation of the earth from the start of the year in rad/day.
     
@@ -91,7 +92,7 @@ def get_time_sunrise(geographical_latitude: float, sun_declination: float) -> fl
     :param sun_declination: (Seasonal) sun declination of the earth in rad
     :return: sunrise time in (float hours)
     """
-    return 12 - (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
+    return 12 - 12 * (acos(-tan(geographical_latitude) * tan(sun_declination))) / pi
 
 def get_time_sunset(geographical_latitude: float, sun_declination: float) -> float:
     """
@@ -101,7 +102,7 @@ def get_time_sunset(geographical_latitude: float, sun_declination: float) -> flo
     :param sun_declination: (Seasonal) sun declination of the earth in rad
     :return: sunset time in (float hours)
     """
-    return 12 + (acos(-tan(geographical_latitude) * tan(sun_declination))) / 15
+    return 12 + 12 * (acos(-tan(geographical_latitude) * tan(sun_declination))) / pi
 
 def get_daylight_duration(geographical_latitude: float, sun_declination: float) -> float:
     """
